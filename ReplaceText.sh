@@ -1,8 +1,8 @@
 #!/bin/bash
 
-old_str=""
-new_str=""
 filename="$1"
+old_str="$2"
+new_str="$3"
 bak_file="${filename}.bak"
 tmp_file="${filename}.tmp"
 
