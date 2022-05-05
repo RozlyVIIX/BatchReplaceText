@@ -4,6 +4,7 @@
 import os
 import sys
 import shutil
+import re
 
 
 # init
@@ -22,8 +23,14 @@ def do_init(text_list, file_list):
 
 # back up resource
 def back_up_file(old_file, bak_file):
+    bak_file_path = './backup'
+    bak_file = bak_file_path + '/' + bak_file
     if os.path.exists(old_file):
-        shutil.copyfile(old_file, bak_file)
+        if os.path.exists(bak_file_path):
+            shutil.copyfile(old_file, bak_file)
+        else:
+            os.mkdir(bak_file_path)
+            shutil.copyfile(old_file, bak_file)
     else:
         print("please check if it exists." + old_file)
         exit()
@@ -39,7 +46,7 @@ def check_file(path):
 # check file content
 def check_content(path):
     if len(path) % 2 != 0:
-        print("please check: " + text_file)
+        print("please check: " + path)
         exit()
 
 
@@ -66,9 +73,9 @@ def handle_file(old_file, new_file, content_list):
 
         # Loop through the file contents by line
         for line in f:
-            if old_str in line:
-                num = line.count(old_str) + num
-                line = line.replace(old_str, new_str)
+            if re.search(old_str, line, re.I):
+                num += len(re.findall(old_str, line, re.I))
+                line = re.sub(old_str, new_str, line, flags=re.I)
             f_new.write(line)
         print(old_str + " replaced %s times\n" % num)
         i = i + 2
@@ -96,4 +103,4 @@ if __name__ == "__main__":
     lf = get_file_content(list_file)
     do_init(tf, lf)
 
-    print ("success")
+    print("==========success!==========")
